@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Food
   - Floor
+  - ship
+  - asteroid
+  - Heal
+  - Damage
   layers:
   - Default
   - TransparentFX

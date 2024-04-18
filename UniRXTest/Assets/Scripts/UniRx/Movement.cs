@@ -3,16 +3,18 @@ using UnityEngine;
 using R3;
 using R3.Triggers;
 using TMPro;
+using Zenject;
 public class Movement : MonoBehaviour
 {
     private CompositeDisposable _disposable = new CompositeDisposable();
-    private float speed = 20f;
+    private float speed = 10f;
     private Rigidbody _rb;
     private Collider _collider;
     private bool inAir = false;
     private float sprint = 1f;
     private int score=0;
     [SerializeField] private TextMeshProUGUI scoreTxt;
+    [Inject] private Health health;
 
     void Start()
     {
@@ -59,7 +61,7 @@ public class Movement : MonoBehaviour
            .AddTo(_disposable);
 
 
-        _collider.OnCollisionExitAsObservable()
+        _collider.OnCollisionEnterAsObservable()
             .Where(t =>t.gameObject.tag =="Food" )
            .Subscribe(other =>
            {
@@ -67,6 +69,28 @@ public class Movement : MonoBehaviour
                Destroy(other.gameObject);
                score++;
                scoreTxt.text = score.ToString();
+           })
+           .AddTo(_disposable);
+
+
+
+        _collider.OnCollisionEnterAsObservable()
+            .Where(t => t.gameObject.tag == "Heal")
+           .Subscribe(other =>
+           {
+               health.Heal(20);
+               Destroy(other.gameObject);
+               Debug.Log(health.CurrentHealth);
+           })
+           .AddTo(_disposable);
+
+        _collider.OnCollisionEnterAsObservable()
+            .Where(t => t.gameObject.tag == "Damage")
+           .Subscribe(other =>
+           {
+               health.TakeDamage(20);
+               Destroy(other.gameObject);
+               Debug.Log(health.CurrentHealth);
            })
            .AddTo(_disposable);
 

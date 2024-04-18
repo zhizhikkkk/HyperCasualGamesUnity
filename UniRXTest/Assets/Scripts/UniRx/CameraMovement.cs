@@ -14,7 +14,7 @@ public class CameraMovement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         Observable.EveryUpdate()
-            .Select(_=> new Vector3(Input.GetAxis("Mouse X"),0, Input.GetAxis("Mouse Y")))
+            .Select(_=> new Vector3(Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime, 0, Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime))
             .Where(input => input != null)
             .Subscribe(input =>
             {
