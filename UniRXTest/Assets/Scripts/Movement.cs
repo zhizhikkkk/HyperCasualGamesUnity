@@ -8,6 +8,7 @@ public class Movement : MonoBehaviour
     public float speed = 20f;
     private Rigidbody _rb;
     private Collider _collider;
+    private bool inAir = false;
 
     void Start()
     {
@@ -23,6 +24,29 @@ public class Movement : MonoBehaviour
                 transform.Translate(movement * speed * Time.deltaTime);
             })
             .AddTo(_disposable);
+        Observable.EveryUpdate()
+            .Where(_=> Input.GetKeyDown(KeyCode.Space) && !inAir)
+            .Subscribe(_ =>
+            {
+                _rb.AddForce(speed * Vector3.up*100);
+                inAir = true;
+            }).AddTo(_disposable);
+
+        Observable.EveryUpdate()
+            .Where(_=>Input.GetKeyDown(KeyCode.LeftControl) )
+            .Subscribe(_ =>
+            {
+                transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            })
+            .AddTo(_disposable);
+
+        Observable.EveryUpdate()
+            .Where(_ => Input.GetKeyUp(KeyCode.LeftControl))
+            .Subscribe(_ =>
+            {
+                transform.localScale = new Vector3(1, 1, 1);
+            })
+            .AddTo(_disposable);
 
         _collider.OnCollisionEnterAsObservable()
             .Where(t =>t.gameObject.tag =="Food" )
@@ -30,6 +54,21 @@ public class Movement : MonoBehaviour
            {
                Debug.Log("־גמשü");
                Destroy(other.gameObject);
+           })
+           .AddTo(_disposable);
+        _collider.OnCollisionEnterAsObservable()
+            .Where(t => t.gameObject.tag == "Floor")
+           .Subscribe(other =>
+           {
+              inAir = false;
+           })
+           .AddTo(_disposable);
+
+        _collider.OnCollisionExitAsObservable()
+             .Where(t => t.gameObject.tag == "Floor")
+           .Subscribe(other =>
+           {
+               inAir = true;
            })
            .AddTo(_disposable);
 
