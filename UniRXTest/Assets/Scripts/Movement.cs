@@ -53,9 +53,10 @@ public class Movement : MonoBehaviour
            .Subscribe(other =>
            {
                Debug.Log("־גמשü");
-               Destroy(other.gameObject);
+               other.transform.position = new Vector3(UnityEngine.Random.Range(0, 10f), 0, UnityEngine.Random.Range(0, 10f));
            })
            .AddTo(_disposable);
+
         _collider.OnCollisionEnterAsObservable()
             .Where(t => t.gameObject.tag == "Floor")
            .Subscribe(other =>
