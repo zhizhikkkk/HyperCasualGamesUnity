@@ -9,19 +9,19 @@ public class Movement : MonoBehaviour
     private Rigidbody _rb;
     private Collider _collider;
     private bool inAir = false;
+    private float sprint = 1f;
 
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
         _collider = GetComponent<CapsuleCollider>();
         Observable.EveryUpdate()
-            .Subscribe(_ =>
+            .Select(_=>new Vector3(Input.GetAxis("Horizontal"),0,Input.GetAxis("Vertical")))
+            .Where(input=>input!=Vector3.zero)
+            .Subscribe(input =>
             {
-                float moveHorizontal = Input.GetAxis("Horizontal");
-                float moveVertical = Input.GetAxis("Vertical");
-
-                Vector3 movement = new Vector3(moveHorizontal, 0, moveVertical);
-                transform.Translate(movement * speed * Time.deltaTime);
+                Vector3 movement = new Vector3(input.x, 0, input.z);
+                transform.Translate(movement * speed * sprint * Time.deltaTime);
             })
             .AddTo(_disposable);
         Observable.EveryUpdate()
@@ -36,7 +36,7 @@ public class Movement : MonoBehaviour
             .Where(_=>Input.GetKeyDown(KeyCode.LeftControl) )
             .Subscribe(_ =>
             {
-                transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                transform.localScale = new Vector3(1f, 0.5f, 1f);
             })
             .AddTo(_disposable);
 
@@ -48,12 +48,20 @@ public class Movement : MonoBehaviour
             })
             .AddTo(_disposable);
 
+        Observable.EveryUpdate()
+           .Subscribe(_ =>
+           {
+               sprint = Input.GetKey(KeyCode.LeftShift) ? 2f : 1f;
+           })
+           .AddTo(_disposable);
+
+
         _collider.OnCollisionEnterAsObservable()
             .Where(t =>t.gameObject.tag =="Food" )
            .Subscribe(other =>
            {
                Debug.Log("־גמשü");
-               other.transform.position = new Vector3(UnityEngine.Random.Range(0, 10f), 0, UnityEngine.Random.Range(0, 10f));
+               other.transform.position = new Vector3(Random.Range(0, 10f), 0, Random.Range(0, 10f));
            })
            .AddTo(_disposable);
 

@@ -14,16 +14,15 @@ public class CameraMovement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         Observable.EveryUpdate()
-            .Subscribe(_ =>
+            .Select(_=> new Vector3(Input.GetAxis("Mouse X"),0, Input.GetAxis("Mouse Y")))
+            .Where(input => input != null)
+            .Subscribe(input =>
             {
-                float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-                float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
-
-                xRotation -= mouseY;
+                xRotation -= input.z;
                 xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
                 transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
-                player.Rotate(Vector3.up * mouseX);
+                player.Rotate(Vector3.up * input.x);
 
             })
             .AddTo(_disposable);
