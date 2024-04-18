@@ -2,7 +2,7 @@
 using UnityEngine;
 using R3;
 
-public class CameraMovement : MonoBehaviour
+public class CameraPlayer : MonoBehaviour
 {
     public float mouseSensitivity = 200f;
     public Transform player;

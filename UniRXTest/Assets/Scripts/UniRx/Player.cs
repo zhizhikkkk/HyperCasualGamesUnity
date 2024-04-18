@@ -4,7 +4,7 @@ using R3;
 using R3.Triggers;
 using TMPro;
 using Zenject;
-public class Movement : MonoBehaviour
+public class Player : MonoBehaviour
 {
     private CompositeDisposable _disposable = new CompositeDisposable();
     private float speed = 10f;
@@ -25,8 +25,8 @@ public class Movement : MonoBehaviour
             .Where(input=>input!=Vector3.zero)
             .Subscribe(input =>
             {
-                Vector3 movement = new Vector3(input.x, 0, input.z);
-                transform.Translate(movement * speed * sprint * Time.deltaTime);
+                Vector3 Player = new Vector3(input.x, 0, input.z);
+                transform.Translate(Player * speed * sprint * Time.deltaTime);
             })
             .AddTo(_disposable);
         Observable.EveryUpdate()
@@ -73,14 +73,12 @@ public class Movement : MonoBehaviour
            .AddTo(_disposable);
 
 
-
         _collider.OnCollisionEnterAsObservable()
             .Where(t => t.gameObject.tag == "Heal")
            .Subscribe(other =>
            {
                health.Heal(20);
                Destroy(other.gameObject);
-               Debug.Log(health.CurrentHealth);
            })
            .AddTo(_disposable);
 
@@ -90,7 +88,6 @@ public class Movement : MonoBehaviour
            {
                health.TakeDamage(20);
                Destroy(other.gameObject);
-               Debug.Log(health.CurrentHealth);
            })
            .AddTo(_disposable);
 
