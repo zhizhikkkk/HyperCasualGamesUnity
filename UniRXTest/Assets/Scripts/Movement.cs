@@ -2,14 +2,17 @@
 using UnityEngine;
 using R3;
 using R3.Triggers;
+using TMPro;
 public class Movement : MonoBehaviour
 {
     private CompositeDisposable _disposable = new CompositeDisposable();
-    public float speed = 20f;
+    private float speed = 20f;
     private Rigidbody _rb;
     private Collider _collider;
     private bool inAir = false;
     private float sprint = 1f;
+    private int score=0;
+    [SerializeField] private TextMeshProUGUI scoreTxt;
 
     void Start()
     {
@@ -28,7 +31,7 @@ public class Movement : MonoBehaviour
             .Where(_=> Input.GetKeyDown(KeyCode.Space) && !inAir)
             .Subscribe(_ =>
             {
-                _rb.AddForce(speed * Vector3.up*100);
+                _rb.AddForce(speed * Vector3.up*10);
                 inAir = true;
             }).AddTo(_disposable);
 
@@ -36,7 +39,7 @@ public class Movement : MonoBehaviour
             .Where(_=>Input.GetKeyDown(KeyCode.LeftControl) )
             .Subscribe(_ =>
             {
-                transform.localScale = new Vector3(1f, 0.5f, 1f);
+                transform.parent.localScale = new Vector3(1f, 0.5f, 1f);
             })
             .AddTo(_disposable);
 
@@ -44,7 +47,7 @@ public class Movement : MonoBehaviour
             .Where(_ => Input.GetKeyUp(KeyCode.LeftControl))
             .Subscribe(_ =>
             {
-                transform.localScale = new Vector3(1, 1, 1);
+                transform.parent.localScale = new Vector3(1, 1, 1);
             })
             .AddTo(_disposable);
 
@@ -56,12 +59,14 @@ public class Movement : MonoBehaviour
            .AddTo(_disposable);
 
 
-        _collider.OnCollisionEnterAsObservable()
+        _collider.OnCollisionExitAsObservable()
             .Where(t =>t.gameObject.tag =="Food" )
            .Subscribe(other =>
            {
-               Debug.Log("־גמשü");
-               other.transform.position = new Vector3(Random.Range(0, 10f), 0, Random.Range(0, 10f));
+               //other.transform.position = new Vector3(Random.Range(0, 20f), 0, Random.Range(0, 20f));
+               Destroy(other.gameObject);
+               score++;
+               scoreTxt.text = score.ToString();
            })
            .AddTo(_disposable);
 
