@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using Zenject;
 using UnityEngine.UI;
@@ -23,5 +22,8 @@ public class HealthBar : MonoBehaviour
 
     }
 
-    
+    private void OnDisable()
+    {
+        _disposable.Clear();
+    }
 }

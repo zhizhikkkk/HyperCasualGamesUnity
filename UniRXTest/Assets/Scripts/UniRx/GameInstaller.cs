@@ -13,5 +13,6 @@ public class GameInstaller : MonoInstaller
     {
         Container.Bind<Health>().FromComponentInNewPrefab(HealthPrefab).AsSingle();
         Container.Bind<Player>().FromComponentInHierarchy().AsSingle();
+        Container.Bind<Score>().FromComponentInHierarchy().AsSingle();
     }
 }
