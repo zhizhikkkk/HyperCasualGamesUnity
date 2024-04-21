@@ -10,6 +10,7 @@ public class IItem : MonoBehaviour
     protected CompositeDisposable _disposable = new CompositeDisposable();
     [Inject] protected Health health;
     [Inject] protected Score score;
+    [Inject] protected InventoryWindow inventoryWindow;
 
     
 }

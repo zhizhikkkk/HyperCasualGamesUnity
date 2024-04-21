@@ -11,16 +11,18 @@ public class InventoryWindow : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("sdfsdf");
+        
         Redraw();
     }
     private void Redraw()
     {
         for(var i = 0; i < targetInventory.inventoryItems.Count; i++)
         {
+            Debug.Log("sdfsdf");
             var item = targetInventory.inventoryItems[i];
             var icon = new GameObject("Icon");
             icon.AddComponent<Image>().sprite = item.icon;
+            icon.transform.SetParent(itemsPanel, false);
         }
     }
 }
