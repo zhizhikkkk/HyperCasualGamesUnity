@@ -4,6 +4,7 @@ using R3;
 
 public class Food : IItem
 {
+    public InventItem itemToAdd; 
     private void Start()
     {
         _trigger = GetComponent<Collider>();
@@ -11,8 +12,10 @@ public class Food : IItem
             .Where(_ => _.gameObject.tag == "Player")
             .Subscribe(_ =>
             {
-                score.AddScore(1);
+                inventory.AddItem(itemToAdd);
                 Destroy(this.gameObject);
+                score.AddScore(1);
+                
             })
             .AddTo(_disposable);
     }

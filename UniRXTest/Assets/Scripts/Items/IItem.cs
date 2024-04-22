@@ -8,9 +8,10 @@ public class IItem : MonoBehaviour
 {
     protected Collider _trigger;
     protected CompositeDisposable _disposable = new CompositeDisposable();
-    [Inject] protected Health health;
-    [Inject] protected Score score;
-    [Inject] protected InventoryWindow inventoryWindow;
+    [Inject] public Health health;
+    [Inject] public Score score;
+    [Inject] public InventoryWindow inventoryWindow;
+    [Inject] public Inventory inventory;
 
     
 }

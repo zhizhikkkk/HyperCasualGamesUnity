@@ -4,6 +4,7 @@ using R3;
 
 public class Heal : IItem
 {
+    public InventItem itemToAdd;
     private void Start()
     {
         _trigger = GetComponent<Collider>();
@@ -11,8 +12,8 @@ public class Heal : IItem
             .Where(_ => _.gameObject.tag == "Player")
             .Subscribe(_ =>
             {
-                health.Heal(20);
                 Destroy(this.gameObject);
+                inventory.AddItem(itemToAdd);
             })
             .AddTo(_disposable);
     }

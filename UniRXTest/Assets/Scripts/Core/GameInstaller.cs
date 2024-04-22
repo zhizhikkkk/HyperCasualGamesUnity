@@ -15,5 +15,6 @@ public class GameInstaller : MonoInstaller
         Container.Bind<Player>().FromComponentInHierarchy().AsSingle();
         Container.Bind<Score>().FromComponentInHierarchy().AsSingle();
         Container.Bind<InventoryWindow>().FromComponentInHierarchy().AsSingle();
+        Container.Bind<Inventory>().FromComponentInHierarchy().AsSingle();
     }
 }

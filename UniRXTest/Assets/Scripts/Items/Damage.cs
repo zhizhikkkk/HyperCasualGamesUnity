@@ -13,9 +13,8 @@ public class Damage :  IItem
             .Subscribe(_ =>
             {
                 Destroy(this.gameObject);
-                inventoryWindow.Add
                 health.TakeDamage(20);
-                
+
             })
             .AddTo(_disposable);
     }

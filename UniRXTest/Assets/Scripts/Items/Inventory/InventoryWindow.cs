@@ -6,23 +6,36 @@ using UnityEngine.UI;
 public class InventoryWindow : MonoBehaviour
 {
     [SerializeField] private Inventory targetInventory;
-    [SerializeField] private RectTransform itemsPanel;
+    [SerializeField] public RectTransform itemsPanel;
+
+    private readonly List<GameObject> drawIcons = new List<GameObject>();
 
 
     void Start()
     {
-        
+        targetInventory.onItemAdded += OnItemAdded;
         Redraw();
     }
+    public void OnItemAdded(InventItem item) => Redraw();
     private void Redraw()
     {
-        for(var i = 0; i < targetInventory.inventoryItems.Count; i++)
+        ClearDrawn();
+        for (var i = 0; i < targetInventory.inventoryItems.Count; i++)
         {
-            Debug.Log("sdfsdf");
             var item = targetInventory.inventoryItems[i];
             var icon = new GameObject("Icon");
             icon.AddComponent<Image>().sprite = item.icon;
-            icon.transform.SetParent(itemsPanel, false);
+            icon.transform.SetParent(itemsPanel.gameObject.transform, false);
+            drawIcons.Add(icon);
+        }
+    }
+
+
+    void ClearDrawn()
+    {
+        for(int i = 0; i < drawIcons.Count; i++)
+        {
+            Destroy(drawIcons[i]);
         }
     }
 }
